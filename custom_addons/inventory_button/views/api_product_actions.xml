@@ -9,14 +9,7 @@
 # Call the function to fetch data from the local API
 env['api.product'].fetch_and_store_api_data()
 
-# Return a notification and redirect to the API Products list
-action = {
-    'type': 'ir.actions.act_window',
-    'name': 'API Products',
-    'res_model': 'api.product',
-    'view_mode': 'tree,form',
-    'target': 'current',
-}
+action = env.ref('inventory_button.action_view_api_products').read()[0]
         </field>
     </record>
 
@@ -27,22 +20,6 @@ action = {
               action="action_generate_random_deliveries"
               sequence="15"/>
 
-    <!-- Add button to Inventory form view's header -->
-    <record id="view_stock_picking_form_inherit_header" model="ir.ui.view">
-        <field name="name">stock.picking.form.inherit.header</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button name="action_custom_button" 
-                        string="Fetch API Data" 
-                        type="object" 
-                        class="btn-primary"
-                        attrs="{'invisible': [('state', 'in', ['cancel', 'done'])]}"/>
-            </xpath>
-        </field>
-    </record>
-    
     <!-- Action window definition for API Products -->
     <record id="action_view_api_products" model="ir.actions.act_window">
         <field name="name">API Products</field>
@@ -50,19 +27,7 @@ action = {
         <field name="view_mode">kanban,tree,form</field>
     </record>
     
-    <!-- Multi-record action button for API Products -->
-    <record id="action_create_delivery_from_api_products" model="ir.actions.server">
-        <field name="name">Create Delivery Orders</field>
-        <field name="model_id" ref="model_api_product"/>
-        <field name="binding_model_id" ref="model_api_product"/>
-        <field name="binding_view_types">list,kanban</field>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records.create_delivery_orders()
-        </field>
-    </record>
-    
+
     <menuitem id="menu_api_products"
               name="API Products"
               parent="stock.menu_stock_root"
