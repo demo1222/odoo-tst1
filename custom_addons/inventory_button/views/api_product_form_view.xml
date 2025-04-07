@@ -4,7 +4,7 @@
         <field name="name">api.product.form</field>
         <field name="model">api.product</field>
         <field name="arch" type="xml">
-            <form>
+            <form edit="false">
                 <header>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}" 
                            statusbar_visible="all_products,processing,approving,done"/>
