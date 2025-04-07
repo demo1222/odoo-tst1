@@ -48,7 +48,7 @@
                                     <field name="address"/>
                                 </group>
                                 <group>
-                                    <field name="photo_url"/>
+                                    <field name="photo_url" widget="url"/>
                                     <field name="notes"/>
                                 </group>
                             </group>
