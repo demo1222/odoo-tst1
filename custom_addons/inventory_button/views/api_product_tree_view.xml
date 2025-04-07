@@ -4,8 +4,7 @@
         <field name="name">api.product.tree</field>
         <field name="model">api.product</field>
         <field name="arch" type="xml">
-            <tree default_order="name">
-                <field name="api_id"/>
+            <tree default_order="date">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="design"/>

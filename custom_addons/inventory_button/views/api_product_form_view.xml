@@ -21,14 +21,32 @@
                             <field name="date"/>
                             <field name="fast_ship"/>
                             <field name="design_difficulty" widget="priority"/>
+                            <field name="quantity"/>
+                            <field name="priority" invisible="1"/>
                         </group>
                         <group>
                             <field name="design"/>
-                            <field name="quantity"/>
+                            <field name="shirt_color"/>
+                            <field name="size"/>
+                            <field name="fit_type"/>
+                            <field name="design_placement"/>
                             <field name="email"/>
-                            <field name="priority"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Additional Information" name="additional_info">
+                            <group>
+                                <group>
+                                    <field name="delivery_date"/>
+                                    <field name="address"/>
+                                </group>
+                                <group>
+                                    <field name="photo_url"/>
+                                    <field name="notes"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

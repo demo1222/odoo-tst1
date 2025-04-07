@@ -18,6 +18,16 @@ class ApiProduct(models.Model):
     quantity = fields.Integer("Quantity", default=1)
     email = fields.Char("Email")
 
+    # New fields for additional data
+    shirt_color = fields.Char("Shirt Color")
+    size = fields.Char("Size")
+    fit_type = fields.Char("Fit Type")
+    design_placement = fields.Char("Design Placement")
+    notes = fields.Text("Notes")
+    photo_url = fields.Char("Photo URL")
+    delivery_date = fields.Date("Delivery Date")
+    address = fields.Char("Shipping Address")
+
     design_difficulty = fields.Selection(
         [
             ("0", "Standard"),
@@ -152,6 +162,15 @@ class ApiProduct(models.Model):
                             "fast_ship": product_data.get("fastShip") == "True",
                             "quantity": product_data.get("quantity", 1),
                             "email": product_data.get("mail", ""),
+                            # Add new fields
+                            "shirt_color": product_data.get("shirtColor", ""),
+                            "size": product_data.get("size", ""),
+                            "fit_type": product_data.get("fitType", ""),
+                            "design_placement": product_data.get("designPlacement", ""),
+                            "notes": product_data.get("notes", ""),
+                            "photo_url": product_data.get("photoURL", ""),
+                            "delivery_date": product_data.get("deliveryDate", False),
+                            "address": product_data.get("address", ""),
                         }
 
                         if not existing_product:
