@@ -22,6 +22,7 @@
                 <field name="email"/>
                 <field name="state"/>
                 <field name="priority"/>
+                <field name="manual_urgent"/>
                 <progressbar field="state" colors='{"all_products": "success", "processing": "info", "approving": "warning", "done": "muted"}'/>
                 <templates>
                     <t t-name="kanban-box">
@@ -32,13 +33,16 @@
                                 </strong>
                                 <!-- Tags section -->
                                 <div class="o_kanban_tags_section mt-1 mb-2">
-                                    <span t-if="record.fast_ship.raw_value" class="badge rounded-pill text-bg-danger  me-1">
+                                    <span t-if="record.manual_urgent.raw_value" class="badge rounded-pill text-bg-danger me-1">
                                         <strong>Urgent</strong>
                                     </span>
-                                    <span t-if="record.quantity.raw_value > 10" class="badge rounded-pill text-bg-warning  me-1">
+                                    <span t-if="record.fast_ship.raw_value" class="badge rounded-pill text-bg-info me-1">
+                                        <strong>Fast</strong>
+                                    </span>
+                                    <span t-if="record.quantity.raw_value > 10" class="badge rounded-pill text-bg-warning me-1">
                                         <strong>Bulk Order</strong>
                                     </span>
-                                    <span t-if="record.design.raw_value" class="badge rounded-pill text-bg-primary  me-1">
+                                    <span t-if="record.design.raw_value" class="badge rounded-pill text-bg-primary me-1">
                                         <strong>Custom</strong>
                                     </span>
                                 </div>

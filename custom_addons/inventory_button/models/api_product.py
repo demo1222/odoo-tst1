@@ -58,6 +58,8 @@ class ApiProduct(models.Model):
         group_expand="_read_group_state",
     )
 
+    manual_urgent = fields.Boolean(string="Manual Urgent", default=False)
+
     # Add this method to properly expand groups in kanban
     @api.model
     def _read_group_state(self, states, domain, order):
@@ -76,7 +78,10 @@ class ApiProduct(models.Model):
             # Default priority = 0
             priority = 0
 
-            # Priority 3 (highest): Urgent (fast_ship)
+            # Priority 4: Manual Urgent
+            if record.manual_urgent:
+                priority += 100
+            # Priority 3 highest: fast_ship
             if record.fast_ship:
                 priority += 50
             # Priority 2: Bulk Order (quantity > 10)
@@ -94,6 +99,11 @@ class ApiProduct(models.Model):
         if "state" not in vals:
             vals["state"] = "all_products"
         return super(ApiProduct, self).create(vals)
+
+    def toggle_manual_urgent(self):
+        for record in self:
+            record.manual_urgent = not record.manual_urgent
+        return True
 
     @api.model
     def fetch_and_store_api_data(self):
