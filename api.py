@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import json
 import random
 from datetime import datetime, timedelta
 
@@ -21,7 +20,6 @@ app.add_middleware(
 def generate_random_shirt_data(count=5):
     products = []
 
-    # Design styles
     design_styles = [
         "Modern",
         "Classic",
@@ -57,7 +55,6 @@ def generate_random_shirt_data(count=5):
         ""
     ] * 10  # Adding empty designs
 
-    # Email domains
     email_domains = [
         "gmail.com",
         "yahoo.com",
@@ -70,41 +67,88 @@ def generate_random_shirt_data(count=5):
         "custom.io",
     ]
 
-    # Start date for generation
+    names = [
+        "Alice Johnson",
+        "Brian Lee",
+        "Catherine Nguyen",
+        "Daniel Perez",
+        "Emily Thompson",
+        "George Smith",
+        "Hannah Davis",
+        "Isaac Moore",
+        "Jasmine Patel",
+        "Kyle Martinez",
+    ]
+
+    shirt_colors = ["White", "Black", "Navy", "Grey", "Red", "Green", "Blue", "Beige"]
+    sizes = ["XS", "S", "M", "L", "XL", "XXL"]
+    fit_types = ["Unisex", "Men", "Women", "Kids"]
+    placements = ["Front Center", "Back", "Left Chest", "Right Sleeve", "Full Front"]
+    notes_samples = [
+        "Please use eco-friendly ink.",
+        "This is a gift, make sure to hide price.",
+        "Add the slogan in Comic Sans.",
+        "Use faded/vintage effect.",
+        "No text, only the image.",
+        "Centered and large print, please.",
+        "Place design on left side only.",
+        "",
+        "",
+    ]
+    photo_urls = [
+        "https://example.com/designs/floral.jpg",
+        "https://example.com/designs/dragon.png",
+        "https://example.com/designs/logo.svg",
+        "https://example.com/designs/comic.jpg",
+        "https://example.com/designs/space.png",
+        "https://example.com/designs/abstract.png",
+        "https://example.com/designs/retro.png",
+    ]
+
+    addresses = [
+        "123 Main St, New York, NY",
+        "456 Oak Ave, Los Angeles, CA",
+        "789 Pine Rd, Chicago, IL",
+        "321 Maple Dr, Houston, TX",
+        "555 Elm St, Miami, FL",
+    ]
+
     start_date = datetime.now()
 
     for i in range(1, count + 1):
-        # Generate random id (simulating database increment)
         item_id = random.randint(1, 1000)
-
-        # Randomly select product type
         product_type = random.choice(["Shirt", "T-Shirt"])
-
-        # Generate a random date between 2 days ago and today
         random_days = random.randint(-2, 0)
         random_date = (start_date + timedelta(days=random_days)).strftime("%Y-%m-%d")
-
-        # Random design
         design = random.choice(design_styles)
+        fast_ship = random.choice(["True"] + ["False"] * 9)
 
-        # Random fastShip boolean (as string)
-        fast_ship = random.choice(["True"] + ["Fasle"] * 9)
-        # Random quantity with higher numbers being less likely
         quantity_weights = {i: max(1, 20 - i) for i in range(1, 21)}
         quantity_options = list(quantity_weights.keys())
-        quantity_probabilities = list(quantity_weights.values())
-        total_weight = sum(quantity_probabilities)
-        quantity_probabilities = [w / total_weight for w in quantity_probabilities]
+        quantity_probabilities = [
+            w / sum(quantity_weights.values()) for w in quantity_weights.values()
+        ]
         quantity = random.choices(
             quantity_options, weights=quantity_probabilities, k=1
         )[0]
 
-        # Generate random email
         email_prefix = f"user{random.randint(100, 999)}"
         email_domain = random.choice(email_domains)
         email = f"{email_prefix}@{email_domain}"
 
-        # Create the product dictionary
+        # New data
+        name = random.choice(names)
+        shirt_color = random.choice(shirt_colors)
+        size = random.choice(sizes)
+        fit_type = random.choice(fit_types)
+        placement = random.choice(placements)
+        note = random.choice(notes_samples)
+        photo = random.choice(photo_urls)
+        address = random.choice(addresses)
+        delivery_date = (start_date + timedelta(days=random.randint(3, 10))).strftime(
+            "%Y-%m-%d"
+        )
+
         product = {
             "id": item_id,
             "product": product_type,
@@ -113,6 +157,15 @@ def generate_random_shirt_data(count=5):
             "fastShip": fast_ship,
             "quantity": quantity,
             "mail": email,
+            "name": name,
+            "shirtColor": shirt_color,
+            "size": size,
+            "fitType": fit_type,
+            "designPlacement": placement,
+            "notes": note,
+            "photoURL": photo,
+            "deliveryDate": delivery_date,
+            "address": address,
         }
 
         products.append(product)
