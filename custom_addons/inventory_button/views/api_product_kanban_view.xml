@@ -34,16 +34,16 @@
                                 <!-- Tags section -->
                                 <div class="o_kanban_tags_section mt-1 mb-2">
                                     <span t-if="record.manual_urgent.raw_value" class="badge rounded-pill text-bg-danger me-1">
-                                        <strong>Urgent</strong>
+                                        <i class="fa fa-exclamation-circle me-1"></i><strong>Urgent</strong>
                                     </span>
                                     <span t-if="record.fast_ship.raw_value" class="badge rounded-pill text-bg-info me-1">
-                                        <strong>Fast</strong>
+                                        <i class="fa fa-bolt me-1"></i><strong>Fast</strong>
                                     </span>
                                     <span t-if="record.quantity.raw_value > 10" class="badge rounded-pill text-bg-warning me-1">
-                                        <strong>Bulk Order</strong>
+                                        <i class="fa fa-cubes me-1"></i><strong>Bulk Order</strong>
                                     </span>
                                     <span t-if="record.design.raw_value" class="badge rounded-pill text-bg-primary me-1">
-                                        <strong>Custom</strong>
+                                        <i class="fa fa-paint-brush me-1"></i><strong>Custom</strong>
                                     </span>
                                 </div>
                                 <field name="design_difficulty" widget="priority"/>
