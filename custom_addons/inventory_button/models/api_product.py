@@ -71,7 +71,7 @@ class ApiProduct(models.Model):
         string="Priority", compute="_compute_priority", store=True
     )
 
-    @api.depends("fast_ship", "quantity", "design")
+    @api.depends("fast_ship", "quantity", "design", "manual_urgent")
     def _compute_priority(self):
         for record in self:
             _logger.info(f"Computing priority for record: {record}")
@@ -103,6 +103,8 @@ class ApiProduct(models.Model):
     def toggle_manual_urgent(self):
         for record in self:
             record.manual_urgent = not record.manual_urgent
+            # Force recompute priority when toggled directly
+            record._compute_priority()
         return True
 
     @api.model
