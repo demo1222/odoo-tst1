@@ -107,6 +107,10 @@ class ApiProduct(models.Model):
             record._compute_priority()
         return True
 
+    def dummy_action(self):
+        """Dummy method for status indicator buttons - does nothing but needed for the buttons to work"""
+        return True
+
     @api.model
     def fetch_and_store_api_data(self):
         """Fetch data from local API and store it in the database"""
