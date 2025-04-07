@@ -1,9 +1,6 @@
 from odoo import models, fields, api
 import requests
-import json
 import logging
-import random
-from datetime import datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -93,24 +90,17 @@ class ApiProduct(models.Model):
         """Fetch data from local API and store it in the database"""
         try:
             # Try different hostnames for different environments
-            hostnames = [
-                "http://host.docker.internal:8000",
-            ]
+
+            hostname = "http://host.docker.internal:8000"
 
             response = None
             exception = None
 
-            for hostname in hostnames:
-                try:
-                    url = f"{hostname}/api/get_data"
-                    _logger.info(f"Trying to connect to API at: {url}")
-                    response = requests.get(url, timeout=30)
-                    if response.status_code == 200:
-                        _logger.info(f"Successfully connected to API at: {url}")
-                        break
-                except requests.exceptions.RequestException as e:
-                    exception = e
-                    continue
+            url = f"{hostname}/api/get_data"
+            _logger.info(f"Trying to connect to API at: {url}")
+            response = requests.get(url, timeout=30)
+            if response.status_code == 200:
+                _logger.info(f"Successfully connected to API at: {url}")
 
             if not response or response.status_code != 200:
                 raise exception or ValueError("Could not connect to any API endpoint")
