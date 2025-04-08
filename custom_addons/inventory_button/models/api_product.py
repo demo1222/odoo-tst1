@@ -279,3 +279,33 @@ class ApiProduct(models.Model):
                     "type": "danger",
                 },
             }
+
+    def action_open_designer(self):
+        """Open the designer's form view"""
+        self.ensure_one()
+        if not self.user_id:
+            return
+
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "res.users",
+            "view_mode": "form",
+            "res_id": self.user_id.id,
+            "target": "current",
+        }
+
+    @api.depends("user_id")
+    def _compute_designer_assigned_products(self):
+        for record in self:
+            if record.user_id:
+                record.designer_assigned_products = self.search(
+                    [("user_id", "=", record.user_id.id), ("id", "!=", record.id)]
+                )
+            else:
+                record.designer_assigned_products = False
+
+    designer_assigned_products = fields.Many2many(
+        "api.product",
+        string="Designer's Other Assignments",
+        compute="_compute_designer_assigned_products",
+    )
