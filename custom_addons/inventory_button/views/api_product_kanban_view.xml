@@ -23,36 +23,68 @@
                 <field name="state"/>
                 <field name="priority"/>
                 <field name="manual_urgent"/>
+                <field name="user_id"/>
                 <progressbar field="state" colors='{"all_products": "success", "processing": "info", "approving": "warning", "done": "muted"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click oe_kanban_card">
-                            <div class="oe_kanban_details">
+                            <!-- Top row with title only -->
+                            <div class="mb-2">
                                 <strong class="o_kanban_record_title">
                                     <field name="name"/>
                                 </strong>
-                                <!-- Tags section -->
-                                <div class="o_kanban_tags_section mt-1 mb-2">
-                                    <span t-if="record.manual_urgent.raw_value" class="badge rounded-pill text-bg-danger me-1">
-                                        <i class="fa fa-exclamation-circle me-1"></i><strong>Urgent</strong>
-                                    </span>
-                                    <span t-if="record.fast_ship.raw_value" class="badge rounded-pill text-bg-info me-1">
-                                        <i class="fa fa-bolt me-1"></i><strong>Fast</strong>
-                                    </span>
-                                    <span t-if="record.quantity.raw_value > 10" class="badge rounded-pill text-bg-warning me-1">
-                                        <i class="fa fa-cubes me-1"></i><strong>Bulk Order</strong>
-                                    </span>
-                                    <span t-if="record.design.raw_value" class="badge rounded-pill text-bg-primary me-1">
-                                        <i class="fa fa-paint-brush me-1"></i><strong>Custom</strong>
-                                    </span>
+                            </div>
+                            
+                            <!-- Tags section -->
+                            <div class="o_kanban_tags_section mb-2">
+                                <span t-if="record.manual_urgent.raw_value" class="badge rounded-pill text-bg-danger me-1">
+                                    <i class="fa fa-exclamation-circle me-1"></i><strong>Urgent</strong>
+                                </span>
+                                <span t-if="record.fast_ship.raw_value" class="badge rounded-pill text-bg-info me-1">
+                                    <i class="fa fa-bolt me-1"></i><strong>Fast</strong>
+                                </span>
+                                <span t-if="record.quantity.raw_value > 10" class="badge rounded-pill text-bg-warning me-1">
+                                    <i class="fa fa-cubes me-1"></i><strong>Bulk Order</strong>
+                                </span>
+                                <span t-if="record.design.raw_value" class="badge rounded-pill text-bg-primary me-1">
+                                    <i class="fa fa-paint-brush me-1"></i><strong>Custom</strong>
+                                </span>
+                            </div>
+                            
+                            <!-- Single column layout with designer in right corner -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <field name="design_difficulty" widget="priority"/>
+                                            <ul class="ps-0" style="list-style-type: none;">
+                                                <li>Date: <field name="date"/></li>
+                                                <li>Quantity: <field name="quantity"/></li>
+                                                <li>Fast Ship: <field name="fast_ship"/></li>
+                                                <li>Email: <field name="email"/></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Designer assignment positioned at right corner -->
+                                        <div class="mt-2">
+                                            <t t-if="record.user_id.raw_value">
+                                                <div class="d-flex align-items-center">
+                                                    <field name="user_id" widget="many2one_avatar_user" 
+                                                           options="{'display_avatar_name': false, 'no_quick_create': true, 'no_create': true}"
+                                                           context="{'form_view_ref': 'base.view_users_form'}"
+                                                           can_create="false" can_write="false"/>
+                                                    <button name="remove_assignment" type="object" class="btn btn-sm btn-link text-danger ms-1" title="Unassign">
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </button>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <button name="assign_to_me" type="object" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-user-plus me-1"></i> Take Order
+                                                </button>
+                                            </t>
+                                        </div>
+                                    </div>
                                 </div>
-                                <field name="design_difficulty" widget="priority"/>
-                                <ul class="mt-2 ps-0" style="list-style-type: none;"> 
-                                    <li>Date: <field name="date"/></li>
-                                    <li>Fast Ship: <field name="fast_ship"/></li>
-                                    <li>Quantity: <field name="quantity"/></li>
-                                    <li>Email: <field name="email"/></li>
-                                </ul>
                             </div>
                         </div>
                     </t>

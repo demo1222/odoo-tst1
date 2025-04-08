@@ -92,8 +92,6 @@ def generate_random_shirt_data(count=5):
         "No text, only the image.",
         "Centered and large print, please.",
         "Place design on left side only.",
-        "",
-        "",
     ]
     photo_urls = [
         "https://example.com/designs/floral.jpg",

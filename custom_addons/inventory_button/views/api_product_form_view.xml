@@ -14,6 +14,12 @@
                     <button name="toggle_manual_urgent" type="object" 
                             string="Remove Urgent" class="btn btn-sm btn-outline-secondary" 
                             attrs="{'invisible': [('manual_urgent', '=', False)]}"/>
+                    <button name="assign_to_me" type="object" 
+                            string="Assign to Me" class="btn btn-sm btn-primary"
+                            attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                    <button name="remove_assignment" type="object" 
+                            string="Unassign" class="btn btn-sm btn-danger"
+                            attrs="{'invisible': [('user_id', '=', False)]}"/>
                 </header>
                 <sheet>
                     <!-- Status indicators -->
@@ -42,11 +48,17 @@
                         </h1>
                     </div>
                     
-                    <!-- Image display if URL is available -->
-                    <div class="row" attrs="{'invisible': [('photo_url', '=', False)]}">
-                        <div class="col-md-6 offset-md-3 mb-4">
-                            <div class="text-center">
-                                <img t-att-src="photo_url" class="img-fluid rounded shadow-sm" style="max-height: 200px;"/>
+                    <!-- Designer assignment -->
+                    <div class="mb-3" attrs="{'invisible': [('user_id', '=', False)]}">
+                        <div class="alert alert-info d-flex align-items-center">
+                            <div><i class="fa fa-user-circle fa-2x me-2"></i></div>
+                            <div>
+                                <strong>Assigned Designer:</strong>
+                                <field name="user_id" readonly="1" 
+                                       options="{'no_open': false, 'no_quick_create': true, 'no_create': true}" 
+                                       widget="many2one_avatar_user"
+                                       context="{'form_view_ref': 'base.view_users_form'}"
+                                       can_create="false" can_write="false"/>
                             </div>
                         </div>
                     </div>

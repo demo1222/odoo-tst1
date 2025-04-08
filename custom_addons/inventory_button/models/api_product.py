@@ -18,6 +18,9 @@ class ApiProduct(models.Model):
     quantity = fields.Integer("Quantity", default=1)
     email = fields.Char("Email")
 
+    # Designer assignment
+    user_id = fields.Many2one("res.users", string="Assigned Designer", tracking=True)
+
     # New fields for additional data
     shirt_color = fields.Char("Shirt Color")
     size = fields.Char("Size")
@@ -110,6 +113,47 @@ class ApiProduct(models.Model):
     def dummy_action(self):
         """Dummy method for status indicator buttons - does nothing but needed for the buttons to work"""
         return True
+
+    # Update method to assign current user as designer only if not already assigned
+    def assign_to_me(self):
+        for record in self:
+            if not record.user_id:
+                record.user_id = self.env.user.id
+            else:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": "Already Assigned",
+                        "message": f"This order is already assigned to {record.user_id.name}",
+                        "type": "warning",
+                        "sticky": False,
+                    },
+                }
+        return True
+
+    def remove_assignment(self):
+        """Remove designer assignment if current user is the assigned designer or an admin"""
+        for record in self:
+            current_user = self.env.user
+            is_admin = current_user.has_group("base.group_system")
+            is_assigned_user = record.user_id.id == current_user.id
+
+            if is_admin or is_assigned_user:
+                record.user_id = False
+                # Don't return notification here to allow the page to refresh
+            else:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": "Permission Denied",
+                        "message": "Only the assigned designer or an administrator can remove assignment",
+                        "type": "warning",
+                        "sticky": False,
+                    },
+                }
+        return True  # Just return True without a notification for successful case
 
     @api.model
     def fetch_and_store_api_data(self):
