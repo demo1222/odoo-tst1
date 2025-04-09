@@ -6,6 +6,7 @@
     "author": "AIT solutions",
     "depends": ["base", "stock"],
     "data": [
+        "security/inventory_security.xml",
         "security/ir.model.access.csv",
         "views/api_product_tree_view.xml",
         "views/api_product_kanban_view.xml",

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Define Designer Group -->
+        <record id="group_inventory_designer" model="res.groups">
+            <field name="name">Designer</field>
+            <field name="category_id" ref="base.module_category_inventory"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Users with Designer access to Inventory Management</field>
+        </record>
+
+        <!-- Add Designer to Inventory Manager implied groups -->
+        <record id="stock.group_stock_manager" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('inventory_button.group_inventory_designer'))]"/>
+        </record>
+    </data>
+</odoo>
