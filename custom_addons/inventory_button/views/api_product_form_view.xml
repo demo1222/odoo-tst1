@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_api_product_form" model="ir.ui.view">
+        <field name="name">api.product.form</field>
+        <field name="model">api.product</field>
+        <field name="arch" type="xml">
+            <form edit="false">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}" 
+                           statusbar_visible="all_products,processing,approving,done"/>
+                    <button name="toggle_manual_urgent" type="object" 
+                            string="Mark as Urgent" class="btn btn-sm btn-outline-danger"
+                            attrs="{'invisible': [('manual_urgent', '=', True)]}"/>
+                    <button name="toggle_manual_urgent" type="object" 
+                            string="Remove Urgent" class="btn btn-sm btn-outline-secondary" 
+                            attrs="{'invisible': [('manual_urgent', '=', False)]}"/>
+                    <button name="assign_to_me" type="object" 
+                            string="Assign to Me" class="btn btn-sm btn-primary"
+                            attrs="{'invisible': [('user_id', '!=', False)]}"/>
+                    <button name="remove_assignment" type="object" 
+                            string="Unassign" class="btn btn-sm btn-danger"
+                            attrs="{'invisible': [('user_id', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <!-- Status indicators -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="dummy_action" type="object" class="oe_stat_button" icon="fa-exclamation-circle" attrs="{'invisible': [('manual_urgent', '=', False)]}">
+                            <div class="o_stat_info text-danger">
+                                <span class="o_stat_text">URGENT</span>
+                            </div>
+                        </button>
+                        <button name="dummy_action" type="object" class="oe_stat_button" icon="fa-bolt" attrs="{'invisible': [('fast_ship', '=', False)]}">
+                            <div class="o_stat_info text-warning">
+                                <span class="o_stat_text">Fast Ship</span>
+                            </div>
+                        </button>
+                        <button name="dummy_action" type="object" class="oe_stat_button" icon="fa-pencil" attrs="{'invisible': [('design', '=', False)]}">
+                            <div class="o_stat_info text-primary">
+                                <span class="o_stat_text">Custom Design</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <!-- Title area -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Product Name"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Designer assignment -->
+                    <div class="mb-3" attrs="{'invisible': [('user_id', '=', False)]}">
+                        <div class="alert alert-info d-flex align-items-center">
+                            <div><i class="fa fa-user-circle fa-2x me-2"></i></div>
+                            <div>
+                                <strong>Assigned Designer:</strong>
+                                <field name="user_id" readonly="1" 
+                                       options="{'no_open': false, 'no_quick_create': true, 'no_create': true}" 
+                                       widget="many2one_avatar_user"
+                                       context="{'form_view_ref': 'base.view_users_form'}"
+                                       can_create="false" can_write="false"/>
+                                <button name="action_open_designer" type="object" 
+                                        string="View Designer" class="btn btn-sm btn-link"
+                                        icon="fa-arrow-right"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Main info -->
+                    <group>
+                        <group string="Order Details" name="order_details">
+                            <field name="date"/>
+                            <field name="quantity"/>
+                            <field name="design_difficulty" widget="priority"/>
+                            <field name="delivery_date"/>
+                            <field name="email" widget="email"/>
+                            <field name="priority" invisible="1"/>
+                            <field name="manual_urgent" invisible="1"/>
+                            <field name="fast_ship" invisible="1"/>
+                        </group>
+                        <group string="Product Specifications" name="product_specs">
+                            <field name="shirt_color"/>
+                            <field name="size"/>
+                            <field name="fit_type"/>
+                            <field name="design_placement"/>
+                            <field name="design"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Additional Information" name="additional_info">
+                            <group>
+                                <group string="Shipping Information" name="shipping_info">
+                                    <field name="address"/>
+                                </group>
+                                <group string="Design Information" name="design_info">
+                                    <field name="photo_url" widget="url"/>
+                                    <field name="notes"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Designer's Assignments" name="designer_assignments" 
+                              attrs="{'invisible': [('user_id', '=', False)]}">
+                            <field name="designer_assigned_products" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                    <field name="delivery_date"/>
+                                    <field name="design_difficulty" widget="priority"/>
+                                    <field name="manual_urgent"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
