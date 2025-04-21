@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_please_test" 
+        name="Please Test" 
+        sequence="10"/>
+    
+    <!-- Labels Menu -->
+    <menuitem id="menu_please_test_labels"
+        name="Labels"
+        parent="menu_please_test"
+        action="action_please_test_label"
+        sequence="10"/>
+
+</odoo>

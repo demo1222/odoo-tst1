@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View with Create Label Button -->
+    <record id="view_please_test_label_form" model="ir.ui.view">
+        <field name="name">please_test.label.form</field>
+        <field name="model">please_test.label</field>
+        <field name="arch" type="xml">
+            <form string="Label">
+                <header>
+                    <button string="Create New Label" name="create_new_label" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="create_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_please_test_label_tree" model="ir.ui.view">
+        <field name="name">please_test.label.tree</field>
+        <field name="model">please_test.label</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open label views -->
+    <record id="action_please_test_label" model="ir.actions.act_window">
+        <field name="name">Labels</field>
+        <field name="res_model">please_test.label</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first label!
+            </p>
+            <p>
+                Click the Create button to add a new label.
+            </p>
+        </field>
+    </record>
+</odoo>

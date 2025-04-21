@@ -3,7 +3,7 @@
     "version": "16.0.1.0.0",
     "category": "Inventory",
     "summary": "Add custom button to fetch data from API and store in database",
-    "author": "AIT solutions",
+    "author": "AIT solutions1",
     "depends": ["base", "stock"],
     "data": [
         "security/inventory_security.xml",
