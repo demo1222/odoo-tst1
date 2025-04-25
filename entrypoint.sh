@@ -1,49 +1,30 @@
 #!/bin/bash
-
 set -e
 
-if [ -v PASSWORD_FILE ]; then
-    PASSWORD="$(< $PASSWORD_FILE)"
+# Use a directory where odoo user has permissions
+CUSTOM_DIR=/var/lib/odoo/custom_addons
+FILESTORE_DIR=/var/lib/odoo/filestore
+
+if [[ -z "$CUSTOM_MODULES_BUCKET" ]]; then
+  echo "ERROR: CUSTOM_MODULES_BUCKET not set"
+  exit 1
 fi
 
-# set the postgres database host, port, user and password according to the environment
-# and pass them as arguments to the odoo process if not present in the config file
-: ${HOST:=${DB_PORT_5432_TCP_ADDR:='carpostgres'}}
-: ${PORT:=${DB_PORT_5432_TCP_PORT:=5432}}
-: ${USER:=${DB_ENV_POSTGRES_USER:=${POSTGRES_USER:='carbackenduser'}}}
-: ${PASSWORD:=${DB_ENV_POSTGRES_PASSWORD:=${POSTGRES_PASSWORD:='carbackenduser'}}}
+if [[ -z "$FILESTORE_BUCKET" ]]; then
+  echo "WARNING: FILESTORE_BUCKET not set, filestore data will not persist between container restarts"
+else
+  echo "Syncing filestore data from gs://$FILESTORE_BUCKET → $FILESTORE_DIR"
+  gsutil -m rsync -r gs://$FILESTORE_BUCKET $FILESTORE_DIR || echo "Failed to sync filestore data, but continuing..."
+fi
 
-DB_ARGS=()
-function check_config() {
-    param="$1"
-    value="$2"
-    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then       
-        value=$(grep -E "^\s*\b${param}\b\s*=" "$ODOO_RC" |cut -d " " -f3|sed 's/["\n\r]//g')
-    fi;
-    DB_ARGS+=("--${param}")
-    DB_ARGS+=("${value}")
-}
-check_config "db_host" "$HOST"
-check_config "db_port" "$PORT"
-check_config "db_user" "$USER"
-check_config "db_password" "$PASSWORD"
+echo "Syncing custom modules from gs://$CUSTOM_MODULES_BUCKET → $CUSTOM_DIR"
+gsutil -m rsync -r gs://$CUSTOM_MODULES_BUCKET $CUSTOM_DIR || echo "Failed to sync custom modules, but continuing..."
 
-case "$1" in
-    -- | odoo)
-        shift
-        if [[ "$1" == "scaffold" ]] ; then
-            exec odoo "$@"
-        else
-            wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-            exec odoo "$@" "${DB_ARGS[@]}"
-        fi
-        ;;
-    -*)
-        wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-        exec odoo "$@" "${DB_ARGS[@]}"
-        ;;
-    *)
-        exec "$@"
-esac
-
-exit 1
+# Start Odoo with configuration file and database settings from environment
+exec odoo -c /etc/odoo/odoo.conf \
+  --db_host="$DB_HOST" \
+  --db_port="$DB_PORT" \
+  --db_user="$DB_USER" \
+  --db_password="$DB_PASSWORD" \
+  --http-port="$PORT" \
+  --http-interface=0.0.0.0
