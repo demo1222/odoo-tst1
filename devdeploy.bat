@@ -16,7 +16,9 @@ for /f "tokens=1,* delims==" %%a in (.env) do (
 @REM if %errorlevel% neq 0 (
 @REM     echo Failed to sync custom modules. Exiting.
 @REM     exit /b 1
-@REM )
+@REM ) 
+@REM use it if you want to sync custom_addons to GCS bucket
+
 
 echo Building Docker image: %GCR_IMAGE_NAME%...
 docker build -t %GCR_IMAGE_NAME% .
