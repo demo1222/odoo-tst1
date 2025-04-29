@@ -1,5 +1,8 @@
-FROM odoo:18.0
+FROM odoo:16.0
 
+COPY ./custom_addons /mnt/extra-addons
+
+ENV ODOO_ADDONS_PATH="/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons"
 # Expose Cloud Run’s port
 EXPOSE 8080
 

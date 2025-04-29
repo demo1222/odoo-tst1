@@ -13,4 +13,6 @@
         "views/label_views.xml",
         "views/menu.xml",
     ],
+    "installable": True,
+    "application": True,
 }
